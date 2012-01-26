@@ -1,0 +1,73 @@
+Spree Heroku
+============
+
+This is an extension for Spree, allowing the e-commerce system to run on Heroku - http://heroku.com.
+
+The major constraint on Heroku is that we can't write files to disk, so this extension disables all disk caching, fixes a few issues and changes Spree to store on Amazon S3.
+
+Requirements
+------------
+
+A Heroku account and an Amazon S3 account with a bucket.
+
+Installation and configuration
+-------------------------------
+
+Add this to your project Gemfile:
+
+    gem 'spree_heroku', :git => 'git://github.com/joneslee85/spree-heroku.git'
+
+Install the new gems with bundler:
+
+    $ bundle install
+
+Specify the S3 credentials:
+
+Create under RAILS_ROOT/config/s3.yml
+
+    development:
+      bucket: your_app_dev
+      access_key_id: your_access_key
+      secret_access_key: secret_access_key
+
+    test:
+      bucket: your_app_test
+      access_key_id: your_access_key
+      secret_access_key: secret_access_key
+
+    production:
+      bucket: your_app_prod
+      access_key_id: your_access_key
+      secret_access_key: secret_access_key
+
+Create a Heroku application and deploy it:
+
+    $ git init
+    $ git add .
+    $ git commit -m 'Initial create'
+    $ heroku create
+    $ git push heroku master
+
+Bootstrap the database locally (not possible in Heroku, because the rake task attempts to copy files), and transfer it to Heroku:
+
+    $ bundle exec rake db:bootstrap
+    $ heroku db:push
+
+Please note that if you choose to load sample data, images will be missing for all products. Spree's bootstrap task copies the images locally, but it doesn't put them on S3, where this extension configures Spree to look for images.
+
+That's it - you're done! :)
+
+Troubleshooting
+---------------
+
+This extension has been tested with Spree 0.70.x and Rails 3.1. If you have problems using the extension with a newer version of Spree, it could be due to Spree's gem dependencies having changed.
+
+Testing
+-------
+
+Be sure to add the rspec-rails gem to your Gemfile and then create a dummy test app for the specs to run against.
+
+    $ rake test app
+    $ bundle exec rspec spec
+
+Copyright (c) 2011 Trung Lê, released under the New BSD License

@@ -1,0 +1,14 @@
+development:
+  bucket: your_app_dev
+  access_key_id: your_access_key
+  secret_access_key: secret_access_key
+
+test:
+  bucket: your_app_test
+  access_key_id: your_access_key
+  secret_access_key: secret_access_key
+
+production:
+  bucket: your_app_prod
+  access_key_id: your_access_key
+  secret_access_key: secret_access_key
